@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import Product, Stock, Customer, ShoppingCart, Order, Shipment
 from .serializers import ProductSerializer, StockSerializer, CustomerSerializer, ShoppingCartSerializer, OrderSerializer, ShipmentSerializer
+from django.http import FileResponse
+import os
 
 # Create your views here.
 
@@ -52,3 +54,8 @@ class ShipmentListView(generics.ListCreateAPIView):
 class ShipmentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Shipment.objects.select_related('order').all()
     serializer_class = ShipmentSerializer
+
+def openapi_spec(request):
+    # Adjust the path if you move the file
+    spec_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'backend/openapi.yaml')
+    return FileResponse(open(spec_path, 'rb'), content_type='application/yaml')

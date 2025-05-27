@@ -5,7 +5,8 @@ from .views import (
     CustomerListView, CustomerDetailView,
     ShoppingCartListView, ShoppingCartDetailView,
     OrderListView, OrderDetailView,
-    ShipmentListView, ShipmentDetailView
+    ShipmentListView, ShipmentDetailView,
+    openapi_spec
 )
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path('orders/<int:pk>/', OrderDetailView.as_view(), name='order-detail'),
     path('shipments/', ShipmentListView.as_view(), name='shipment-list'),
     path('shipments/<int:pk>/', ShipmentDetailView.as_view(), name='shipment-detail'),
+    path('openapi.yaml', openapi_spec, name='openapi-spec'),
 ]
