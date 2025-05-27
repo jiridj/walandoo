@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem, Shipment
+from rest_framework.authtoken.models import Token
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -44,3 +45,6 @@ class ShipmentAdmin(admin.ModelAdmin):
     list_display = ('order', 'tracking_number', 'carrier', 'status', 'shipped_at', 'delivered_at', 'last_updated')
     search_fields = ('tracking_number', 'carrier', 'order__id')
     list_filter = ('status', 'carrier')
+
+# Register the Token model for admin management
+admin.site.register(Token)
