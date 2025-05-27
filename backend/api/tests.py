@@ -2,6 +2,10 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
+from .permissions import IsSelf
 from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem, Shipment
 
 class ProductModelTest(TestCase):
@@ -99,7 +103,7 @@ class StockAPITest(APITestCase):
         self.assertTrue(len(response.data) >= 1)
 
     def test_retrieve_stock(self):
-        url = reverse('stock-detail', args=[self.stock.pk])
+        url = reverse('stock-detail', args=[self.product.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['quantity'], 7)
@@ -107,7 +111,9 @@ class StockAPITest(APITestCase):
 
 class CustomerModelTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="john", email="john@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="John",
             last_name="Doe",
             email="john@example.com",
@@ -123,17 +129,16 @@ class CustomerModelTest(TestCase):
 
 class CustomerAPITest(APITestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="testcustomer", email="testcustomer@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Test",
             last_name="Customer",
             email="testcustomer@example.com"
         )
-
-    def test_list_customers(self):
-        url = reverse('customer-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(len(response.data) >= 1)
+        self.token = Token.objects.create(user=self.user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_retrieve_customer(self):
         url = reverse('customer-detail', args=[self.customer.pk])
@@ -143,7 +148,9 @@ class CustomerAPITest(APITestCase):
 
 class ShoppingCartModelTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="jane", email="jane@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Jane",
             last_name="Smith",
             email="jane@example.com"
@@ -175,12 +182,17 @@ class ShoppingCartModelTest(TestCase):
 
 class ShoppingCartAPITest(APITestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="cartuser", email="cartuser@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Cart",
             last_name="User",
             email="cartuser@example.com"
         )
         self.cart = ShoppingCart.objects.create(customer=self.customer)
+        self.token = Token.objects.create(user=self.user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_list_carts(self):
         url = reverse('cart-list')
@@ -196,7 +208,9 @@ class ShoppingCartAPITest(APITestCase):
 
 class OrderModelTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="alice", email="alice@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Alice",
             last_name="Wonder",
             email="alice@example.com"
@@ -229,12 +243,17 @@ class OrderModelTest(TestCase):
 
 class OrderAPITest(APITestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="orderuser", email="orderuser@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Order",
             last_name="User",
             email="orderuser@example.com"
         )
         self.order = Order.objects.create(customer=self.customer, total=100.00, status="pending")
+        self.token = Token.objects.create(user=self.user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_list_orders(self):
         url = reverse('order-list')
@@ -250,7 +269,9 @@ class OrderAPITest(APITestCase):
 
 class ShipmentModelTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="bob", email="bob@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Bob",
             last_name="Shipper",
             email="bob@example.com"
@@ -284,7 +305,9 @@ class ShipmentModelTest(TestCase):
 
 class ShipmentAPITest(APITestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username="shipuser", email="shipuser@example.com", password="testpass")
         self.customer = Customer.objects.create(
+            user=self.user,
             first_name="Ship",
             last_name="User",
             email="shipuser@example.com"
@@ -296,6 +319,9 @@ class ShipmentAPITest(APITestCase):
             carrier="FedEx",
             status="delivered"
         )
+        self.token = Token.objects.create(user=self.user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_list_shipments(self):
         url = reverse('shipment-list')
@@ -309,3 +335,61 @@ class ShipmentAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['tracking_number'], "SHIP123")
         self.assertEqual(response.data['order'], self.order.pk)
+
+class RegistrationAPITest(APITestCase):
+    def test_register_user(self):
+        url = reverse('user-register')
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'TestPass123!',
+            'first_name': 'New',
+            'last_name': 'User'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['username'], 'newuser')
+        self.assertEqual(User.objects.filter(username='newuser').count(), 1)
+
+class UserProfileAPITest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='profileuser',
+            email='profile@example.com',
+            password='TestPass123!',
+            first_name='Profile',
+            last_name='User'
+        )
+        self.token = Token.objects.create(user=self.user)
+        self.client = APIClient()
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+
+    def test_get_profile(self):
+        url = reverse('user-profile')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'profileuser')
+
+    def test_update_profile(self):
+        url = reverse('user-profile')
+        response = self.client.put(url, {'first_name': 'Changed'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, 'Changed')
+
+class IsSelfPermissionTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username='user1', password='pass')
+        self.user2 = User.objects.create_user(username='user2', password='pass')
+        from .models import Customer
+        self.customer1 = Customer.objects.create(user=self.user1, first_name='A', last_name='B', email='a@b.com')
+        self.customer2 = Customer.objects.create(user=self.user2, first_name='C', last_name='D', email='c@d.com')
+        self.permission = IsSelf()
+
+    def test_permission_allows_self(self):
+        class DummyRequest: user = self.user1
+        self.assertTrue(self.permission.has_object_permission(DummyRequest(), None, self.customer1))
+
+    def test_permission_denies_other(self):
+        class DummyRequest: user = self.user1
+        self.assertFalse(self.permission.has_object_permission(DummyRequest(), None, self.customer2))
