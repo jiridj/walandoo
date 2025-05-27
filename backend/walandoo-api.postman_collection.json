@@ -1,0 +1,798 @@
+{
+  "info": {
+    "_postman_id": "walandoo-api-collection-2025-05-27",
+    "name": "Walandoo API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for testing all Walandoo API endpoints. Set the {{base_url}} and {{token}} variables in your environment."
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"TestPass123!\",\n  \"first_name\": \"New\",\n  \"last_name\": \"User\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+      }
+    },
+    {
+      "name": "Token Auth (Login)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"TestPass123!\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+      }
+    },
+    {
+      "name": "Get User Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+      }
+    },
+    {
+      "name": "Update User Profile",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"Changed\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+      }
+    },
+    {
+      "name": "List Products",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/products/", "host": ["{{base_url}}"], "path": ["api", "products", ""] }
+      }
+    },
+    {
+      "name": "Get Product Detail",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/products/1/", "host": ["{{base_url}}"], "path": ["api", "products", "1", ""] }
+      }
+    },
+    {
+      "name": "List Stock",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/stock/", "host": ["{{base_url}}"], "path": ["api", "stock", ""] }
+      }
+    },
+    {
+      "name": "Get Stock for Product",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/stock/1/", "host": ["{{base_url}}"], "path": ["api", "stock", "1", ""] }
+      }
+    },
+    {
+      "name": "Get Customer Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/customers/1/", "host": ["{{base_url}}"], "path": ["api", "customers", "1", ""] }
+      }
+    },
+    {
+      "name": "Update Customer Profile",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"address\": \"New Address\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/customers/1/", "host": ["{{base_url}}"], "path": ["api", "customers", "1", ""] }
+      }
+    },
+    {
+      "name": "List Carts",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/carts/", "host": ["{{base_url}}"], "path": ["api", "carts", ""] }
+      }
+    },
+    {
+      "name": "Create Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": 1\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/", "host": ["{{base_url}}"], "path": ["api", "carts", ""] }
+      }
+    },
+    {
+      "name": "Get Cart Detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/carts/1/", "host": ["{{base_url}}"], "path": ["api", "carts", "1", ""] }
+      }
+    },
+    {
+      "name": "List Orders",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/orders/", "host": ["{{base_url}}"], "path": ["api", "orders", ""] }
+      }
+    },
+    {
+      "name": "Create Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": 1,\n  \"total\": 100.0,\n  \"status\": \"pending\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/orders/", "host": ["{{base_url}}"], "path": ["api", "orders", ""] }
+      }
+    },
+    {
+      "name": "Get Order Detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/orders/1/", "host": ["{{base_url}}"], "path": ["api", "orders", "1", ""] }
+      }
+    },
+    {
+      "name": "List Shipments",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/shipments/", "host": ["{{base_url}}"], "path": ["api", "shipments", ""] }
+      }
+    },
+    {
+      "name": "Create Shipment",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": 1,\n  \"tracking_number\": \"TRACK123\",\n  \"carrier\": \"UPS\",\n  \"status\": \"in transit\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/shipments/", "host": ["{{base_url}}"], "path": ["api", "shipments", ""] }
+      }
+    },
+    {
+      "name": "Get Shipment Detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/shipments/1/", "host": ["{{base_url}}"], "path": ["api", "shipments", "1", ""] }
+      }
+    },
+    {
+      "name": "Download OpenAPI Spec",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/openapi.yaml", "host": ["{{base_url}}"], "path": ["api", "openapi.yaml"] }
+      }
+    },
+    {
+      "name": "Negative: Unauthorized Get Profile",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+      },
+      "response": [
+        {
+          "code": 401,
+          "name": "Unauthorized",
+          "body": "{\n  \"detail\": \"Authentication credentials were not provided.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Negative: Forbidden Order Detail (Other User)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/orders/9999/", "host": ["{{base_url}}"], "path": ["api", "orders", "9999", ""] }
+      },
+      "response": [
+        {
+          "code": 404,
+          "name": "Not Found",
+          "body": "{\n  \"detail\": \"Not found.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Chained: Register, Login, Get Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save username and password for login",
+              "pm.collectionVariables.set('username', 'chainuser');",
+              "pm.collectionVariables.set('password', 'ChainPass123!');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"chainuser\",\n  \"email\": \"chainuser@example.com\",\n  \"password\": \"ChainPass123!\",\n  \"first_name\": \"Chain\",\n  \"last_name\": \"User\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+      },
+      "response": []
+    },
+    {
+      "name": "Chained: Login (Get Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save token for subsequent requests",
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('token', json.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+      },
+      "response": []
+    },
+    {
+      "name": "Chained: Get Profile (with Chained Token)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+      },
+      "response": []
+    },
+    {
+      "name": "Chained: Register User A",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set('userA', 'userA');",
+              "pm.collectionVariables.set('passA', 'UserAPass123!');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"userA\",\n  \"email\": \"userA@example.com\",\n  \"password\": \"UserAPass123!\",\n  \"first_name\": \"User\",\n  \"last_name\": \"A\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+      }
+    },
+    {
+      "name": "Chained: Login User A (Get Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('tokenA', json.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{userA}}\",\n  \"password\": \"{{passA}}\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+      }
+    },
+    {
+      "name": "Chained: Create Order as User A",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('orderA', json.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{tokenA}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": 1,\n  \"total\": 50.0,\n  \"status\": \"pending\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/orders/", "host": ["{{base_url}}"], "path": ["api", "orders", ""] }
+      }
+    },
+    {
+      "name": "Chained: Register User B",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set('userB', 'userB');",
+              "pm.collectionVariables.set('passB', 'UserBPass123!');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"userB\",\n  \"email\": \"userB@example.com\",\n  \"password\": \"UserBPass123!\",\n  \"first_name\": \"User\",\n  \"last_name\": \"B\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+      }
+    },
+    {
+      "name": "Chained: Login User B (Get Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('tokenB', json.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{userB}}\",\n  \"password\": \"{{passB}}\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+      }
+    },
+    {
+      "name": "Chained: User B Forbidden to Access User A's Order",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{tokenB}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/orders/{{orderA}}/", "host": ["{{base_url}}"], "path": ["api", "orders", "{{orderA}}", ""] }
+      },
+      "response": [
+        {
+          "code": 404,
+          "name": "Not Found",
+          "body": "{\n  \"detail\": \"Not found.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "E2E: Register E2E User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set('e2e_user', 'e2euser');",
+              "pm.collectionVariables.set('e2e_pass', 'E2eUserPass123!');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"e2euser\",\n  \"email\": \"e2euser@example.com\",\n  \"password\": \"E2eUserPass123!\",\n  \"first_name\": \"E2E\",\n  \"last_name\": \"User\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+      }
+    },
+    {
+      "name": "E2E: Login E2E User (Get Token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('e2e_token', json.token);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{e2e_user}}\",\n  \"password\": \"{{e2e_pass}}\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+      }
+    },
+    {
+      "name": "E2E: Get Customer Profile (ID)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('e2e_customer', json.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/customers/1/", "host": ["{{base_url}}"], "path": ["api", "customers", "1", ""] }
+      }
+    },
+    {
+      "name": "E2E: Create Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('e2e_cart', json.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": {{e2e_customer}}\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/", "host": ["{{base_url}}"], "path": ["api", "carts", ""] }
+      }
+    },
+    {
+      "name": "E2E: List Products (Get Product ID)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json.length > 0) { pm.collectionVariables.set('e2e_product', json[0].id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/products/", "host": ["{{base_url}}"], "path": ["api", "products", ""] }
+      }
+    },
+    {
+      "name": "E2E: Add Product to Cart",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cart\": {{e2e_cart}},\n  \"product\": {{e2e_product}},\n  \"quantity\": 2\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", ""] }
+      }
+    },
+    {
+      "name": "E2E: Create Order from Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('e2e_order', json.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer\": {{e2e_customer}},\n  \"total\": 100.0,\n  \"status\": \"pending\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/orders/", "host": ["{{base_url}}"], "path": ["api", "orders", ""] }
+      }
+    },
+    {
+      "name": "E2E: Create Shipment for Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order\": {{e2e_order}},\n  \"tracking_number\": \"E2ETRACK\",\n  \"carrier\": \"E2ECarrier\",\n  \"status\": \"in transit\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/shipments/", "host": ["{{base_url}}"], "path": ["api", "shipments", ""] }
+      }
+    },
+    {
+      "name": "E2E: List Orders (Should Contain E2E Order)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/orders/", "host": ["{{base_url}}"], "path": ["api", "orders", ""] }
+      }
+    },
+    {
+      "name": "E2E: List Shipments (Should Contain E2E Shipment)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/shipments/", "host": ["{{base_url}}"], "path": ["api", "shipments", ""] }
+      }
+    },
+    {
+      "name": "E2E: Add Product to Cart (for Update)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "pm.collectionVariables.set('e2e_cart_item', json.id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cart\": {{e2e_cart}},\n  \"product\": {{e2e_product}},\n  \"quantity\": 1\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", ""] }
+      }
+    },
+    {
+      "name": "E2E: Update Cart Item Quantity",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 5\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/{{e2e_cart_item}}/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", "{{e2e_cart_item}}", ""] }
+      }
+    },
+    {
+      "name": "E2E: Get Updated Cart Item",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/{{e2e_cart_item}}/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", "{{e2e_cart_item}}", ""] }
+      }
+    },
+    {
+      "name": "E2E: Delete Cart Item",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/{{e2e_cart_item}}/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", "{{e2e_cart_item}}", ""] }
+      }
+    },
+    {
+      "name": "E2E: Get Deleted Cart Item (Should 404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/{{e2e_cart_item}}/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", "{{e2e_cart_item}}", ""] }
+      },
+      "response": [
+        {
+          "code": 404,
+          "name": "Not Found",
+          "body": "{\n  \"detail\": \"Not found.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Negative: Update Cart Item with Invalid Data",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": \"notanumber\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/{{e2e_cart_item}}/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", "{{e2e_cart_item}}", ""] }
+      },
+      "response": [
+        {
+          "code": 400,
+          "name": "Bad Request",
+          "body": "{\n  \"quantity\": [\"A valid integer is required.\"]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Negative: Update Cart Item with Missing Field",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Token {{e2e_token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": { "raw": "{{base_url}}/api/carts/{{e2e_cart}}/items/{{e2e_cart_item}}/", "host": ["{{base_url}}"], "path": ["api", "carts", "{{e2e_cart}}", "items", "{{e2e_cart_item}}", ""] }
+      },
+      "response": [
+        {
+          "code": 400,
+          "name": "Bad Request",
+          "body": "{\n  \"quantity\": [\"This field is required.\"]\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" }
+  ]
+}
