@@ -22,6 +22,7 @@ class StockListView(generics.ListAPIView):
 class StockDetailView(generics.RetrieveAPIView):
     queryset = Stock.objects.select_related('product').all()
     serializer_class = StockSerializer
+    lookup_field = 'product_id'
 
 class CustomerListView(generics.ListCreateAPIView):
     queryset = Customer.objects.all()

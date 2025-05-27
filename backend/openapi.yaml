@@ -58,14 +58,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Stock'
-  /stock/{id}/:
+  /stock/{product_id}/:
     get:
-      summary: Retrieve stock by ID
-      operationId: getStock
+      summary: Retrieve stock by product ID
+      operationId: getStockByProductId
       tags:
         - Stock
       parameters:
-        - name: id
+        - name: product_id
           in: path
           required: true
           schema:
