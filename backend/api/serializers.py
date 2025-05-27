@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem
+from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem, Shipment
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +47,11 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'customer', 'customer_name', 'created_at', 'total', 'status', 'items']
+
+class ShipmentSerializer(serializers.ModelSerializer):
+    order_id = serializers.IntegerField(source='order.id', read_only=True)
+    class Meta:
+        model = Shipment
+        fields = [
+            'id', 'order', 'order_id', 'tracking_number', 'carrier', 'status', 'shipped_at', 'delivered_at', 'last_updated'
+        ]

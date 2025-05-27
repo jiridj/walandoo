@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Product, Stock
+from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem, Shipment
 
 class ProductModelTest(TestCase):
     def setUp(self):
@@ -104,3 +104,208 @@ class StockAPITest(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['quantity'], 7)
         self.assertEqual(response.data['product'], self.product.pk)
+
+class CustomerModelTest(TestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="John",
+            last_name="Doe",
+            email="john@example.com",
+            address="123 Main St"
+        )
+
+    def test_customer_str(self):
+        self.assertEqual(str(self.customer), "John Doe")
+
+    def test_customer_fields(self):
+        self.assertEqual(self.customer.email, "john@example.com")
+        self.assertEqual(self.customer.address, "123 Main St")
+
+class CustomerAPITest(APITestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Test",
+            last_name="Customer",
+            email="testcustomer@example.com"
+        )
+
+    def test_list_customers(self):
+        url = reverse('customer-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(response.data) >= 1)
+
+    def test_retrieve_customer(self):
+        url = reverse('customer-detail', args=[self.customer.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['email'], "testcustomer@example.com")
+
+class ShoppingCartModelTest(TestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Jane",
+            last_name="Smith",
+            email="jane@example.com"
+        )
+        self.product = Product.objects.create(
+            number=5,
+            title="Cart Product",
+            price=10.00,
+            description="Cart test product.",
+            category="cart-category",
+            image="cart.jpg",
+            rating_rate=4.2,
+            rating_count=12
+        )
+        self.cart = ShoppingCart.objects.create(customer=self.customer)
+        self.item = ShoppingCartItem.objects.create(cart=self.cart, product=self.product, quantity=3)
+
+    def test_cart_str(self):
+        self.assertIn(str(self.customer), str(self.cart))
+
+    def test_cart_item_str(self):
+        self.assertIn("Cart Product", str(self.item))
+        self.assertIn(str(self.cart.id), str(self.item))
+
+    def test_cart_item_fields(self):
+        self.assertEqual(self.item.quantity, 3)
+        self.assertEqual(self.item.product, self.product)
+        self.assertEqual(self.item.cart, self.cart)
+
+class ShoppingCartAPITest(APITestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Cart",
+            last_name="User",
+            email="cartuser@example.com"
+        )
+        self.cart = ShoppingCart.objects.create(customer=self.customer)
+
+    def test_list_carts(self):
+        url = reverse('cart-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(response.data) >= 1)
+
+    def test_retrieve_cart(self):
+        url = reverse('cart-detail', args=[self.cart.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['customer'], self.customer.pk)
+
+class OrderModelTest(TestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Alice",
+            last_name="Wonder",
+            email="alice@example.com"
+        )
+        self.product = Product.objects.create(
+            number=6,
+            title="Order Product",
+            price=20.00,
+            description="Order test product.",
+            category="order-category",
+            image="order.jpg",
+            rating_rate=4.8,
+            rating_count=22
+        )
+        self.order = Order.objects.create(customer=self.customer, total=40.00, status="pending")
+        self.item = OrderItem.objects.create(order=self.order, product=self.product, quantity=2, price=20.00)
+
+    def test_order_str(self):
+        self.assertIn(str(self.customer), str(self.order))
+
+    def test_order_item_str(self):
+        self.assertIn("Order Product", str(self.item))
+        self.assertIn(str(self.order.id), str(self.item))
+
+    def test_order_item_fields(self):
+        self.assertEqual(self.item.quantity, 2)
+        self.assertEqual(self.item.product, self.product)
+        self.assertEqual(self.item.order, self.order)
+        self.assertEqual(self.item.price, 20.00)
+
+class OrderAPITest(APITestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Order",
+            last_name="User",
+            email="orderuser@example.com"
+        )
+        self.order = Order.objects.create(customer=self.customer, total=100.00, status="pending")
+
+    def test_list_orders(self):
+        url = reverse('order-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(response.data) >= 1)
+
+    def test_retrieve_order(self):
+        url = reverse('order-detail', args=[self.order.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['customer'], self.customer.pk)
+
+class ShipmentModelTest(TestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Bob",
+            last_name="Shipper",
+            email="bob@example.com"
+        )
+        self.product = Product.objects.create(
+            number=7,
+            title="Shipped Product",
+            price=30.00,
+            description="Shipped test product.",
+            category="ship-category",
+            image="ship.jpg",
+            rating_rate=4.0,
+            rating_count=5
+        )
+        self.order = Order.objects.create(customer=self.customer, total=30.00, status="shipped")
+        self.shipment = Shipment.objects.create(
+            order=self.order,
+            tracking_number="TRACK123",
+            carrier="UPS",
+            status="in transit"
+        )
+
+    def test_shipment_str(self):
+        self.assertIn("TRACK123", str(self.shipment))
+        self.assertIn(str(self.order.id), str(self.shipment))
+
+    def test_shipment_fields(self):
+        self.assertEqual(self.shipment.carrier, "UPS")
+        self.assertEqual(self.shipment.status, "in transit")
+        self.assertEqual(self.shipment.order, self.order)
+
+class ShipmentAPITest(APITestCase):
+    def setUp(self):
+        self.customer = Customer.objects.create(
+            first_name="Ship",
+            last_name="User",
+            email="shipuser@example.com"
+        )
+        self.order = Order.objects.create(customer=self.customer, total=50.00, status="shipped")
+        self.shipment = Shipment.objects.create(
+            order=self.order,
+            tracking_number="SHIP123",
+            carrier="FedEx",
+            status="delivered"
+        )
+
+    def test_list_shipments(self):
+        url = reverse('shipment-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(len(response.data) >= 1)
+
+    def test_retrieve_shipment(self):
+        url = reverse('shipment-detail', args=[self.shipment.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['tracking_number'], "SHIP123")
+        self.assertEqual(response.data['order'], self.order.pk)

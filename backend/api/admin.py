@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem
+from .models import Product, Stock, Customer, ShoppingCart, ShoppingCartItem, Order, OrderItem, Shipment
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -38,3 +38,9 @@ class OrderAdmin(admin.ModelAdmin):
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ('order', 'product', 'quantity', 'price')
     search_fields = ('order__customer__email', 'product__title')
+
+@admin.register(Shipment)
+class ShipmentAdmin(admin.ModelAdmin):
+    list_display = ('order', 'tracking_number', 'carrier', 'status', 'shipped_at', 'delivered_at', 'last_updated')
+    search_fields = ('tracking_number', 'carrier', 'order__id')
+    list_filter = ('status', 'carrier')

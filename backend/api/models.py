@@ -66,3 +66,15 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.title} in order {self.order.id}"
+
+class Shipment(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='shipment')
+    tracking_number = models.CharField(max_length=100, unique=True)
+    carrier = models.CharField(max_length=100)
+    status = models.CharField(max_length=50, default='pending')
+    shipped_at = models.DateTimeField(null=True, blank=True)
+    delivered_at = models.DateTimeField(null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Shipment for Order {self.order.id} - {self.tracking_number}"
