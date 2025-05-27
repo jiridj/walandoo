@@ -52,24 +52,34 @@ class ShoppingCartDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class OrderListView(generics.ListCreateAPIView):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Only return orders for the authenticated user's customer
+        return Order.objects.filter(customer__user=self.request.user)
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Order.objects.filter(customer__user=self.request.user)
+
 class ShipmentListView(generics.ListCreateAPIView):
-    queryset = Shipment.objects.select_related('order').all()
     serializer_class = ShipmentSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Only return shipments for orders belonging to the authenticated user's customer
+        return Shipment.objects.filter(order__customer__user=self.request.user)
+
 class ShipmentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Shipment.objects.select_related('order').all()
     serializer_class = ShipmentSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Shipment.objects.filter(order__customer__user=self.request.user)
 
 class UserRegistrationView(APIView):
     permission_classes = [AllowAny]

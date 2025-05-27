@@ -393,3 +393,70 @@ class IsSelfPermissionTest(TestCase):
     def test_permission_denies_other(self):
         class DummyRequest: user = self.user1
         self.assertFalse(self.permission.has_object_permission(DummyRequest(), None, self.customer2))
+
+class OrderAndShipmentPermissionsTest(APITestCase):
+    def setUp(self):
+        # User 1 and their customer
+        self.user1 = User.objects.create_user(username="user1", email="user1@example.com", password="pass1")
+        self.customer1 = Customer.objects.create(user=self.user1, first_name="U1", last_name="One", email="user1@example.com")
+        # User 2 and their customer
+        self.user2 = User.objects.create_user(username="user2", email="user2@example.com", password="pass2")
+        self.customer2 = Customer.objects.create(user=self.user2, first_name="U2", last_name="Two", email="user2@example.com")
+        # Product
+        self.product = Product.objects.create(
+            number=100,
+            title="Perm Product",
+            price=10.0,
+            description="Perm test product.",
+            category="perm-category",
+            image="perm.jpg",
+            rating_rate=4.0,
+            rating_count=1
+        )
+        # Orders
+        self.order1 = Order.objects.create(customer=self.customer1, total=10.0, status="pending")
+        self.order2 = Order.objects.create(customer=self.customer2, total=20.0, status="pending")
+        # Shipments
+        self.shipment1 = Shipment.objects.create(order=self.order1, tracking_number="T1", carrier="UPS", status="in transit")
+        self.shipment2 = Shipment.objects.create(order=self.order2, tracking_number="T2", carrier="FedEx", status="delivered")
+        # Auth clients
+        self.client1 = APIClient()
+        self.token1 = Token.objects.create(user=self.user1)
+        self.client1.credentials(HTTP_AUTHORIZATION='Token ' + self.token1.key)
+        self.client2 = APIClient()
+        self.token2 = Token.objects.create(user=self.user2)
+        self.client2.credentials(HTTP_AUTHORIZATION='Token ' + self.token2.key)
+
+    def test_user_can_only_list_own_orders(self):
+        url = reverse('order-list')
+        resp1 = self.client1.get(url)
+        resp2 = self.client2.get(url)
+        self.assertEqual(len(resp1.data), 1)
+        self.assertEqual(resp1.data[0]['id'], self.order1.id)
+        self.assertEqual(len(resp2.data), 1)
+        self.assertEqual(resp2.data[0]['id'], self.order2.id)
+
+    def test_user_cannot_access_others_order_detail(self):
+        url = reverse('order-detail', args=[self.order2.pk])
+        resp = self.client1.get(url)
+        self.assertEqual(resp.status_code, 404)
+        url2 = reverse('order-detail', args=[self.order1.pk])
+        resp2 = self.client1.get(url2)
+        self.assertEqual(resp2.status_code, 200)
+
+    def test_user_can_only_list_own_shipments(self):
+        url = reverse('shipment-list')
+        resp1 = self.client1.get(url)
+        resp2 = self.client2.get(url)
+        self.assertEqual(len(resp1.data), 1)
+        self.assertEqual(resp1.data[0]['id'], self.shipment1.id)
+        self.assertEqual(len(resp2.data), 1)
+        self.assertEqual(resp2.data[0]['id'], self.shipment2.id)
+
+    def test_user_cannot_access_others_shipment_detail(self):
+        url = reverse('shipment-detail', args=[self.shipment2.pk])
+        resp = self.client1.get(url)
+        self.assertEqual(resp.status_code, 404)
+        url2 = reverse('shipment-detail', args=[self.shipment1.pk])
+        resp2 = self.client1.get(url2)
+        self.assertEqual(resp2.status_code, 200)
