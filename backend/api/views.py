@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, Stock, Customer, ShoppingCart, Order
+from .serializers import ProductSerializer, StockSerializer, CustomerSerializer, ShoppingCartSerializer, OrderSerializer
 
 # Create your views here.
 
@@ -12,3 +12,35 @@ class ProductListView(generics.ListAPIView):
 class ProductDetailView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+class StockListView(generics.ListAPIView):
+    queryset = Stock.objects.select_related('product').all()
+    serializer_class = StockSerializer
+
+class StockDetailView(generics.RetrieveAPIView):
+    queryset = Stock.objects.select_related('product').all()
+    serializer_class = StockSerializer
+
+class CustomerListView(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class ShoppingCartListView(generics.ListCreateAPIView):
+    queryset = ShoppingCart.objects.all()
+    serializer_class = ShoppingCartSerializer
+
+class ShoppingCartDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ShoppingCart.objects.all()
+    serializer_class = ShoppingCartSerializer
+
+class OrderListView(generics.ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
