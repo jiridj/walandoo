@@ -17,7 +17,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"TestPass123!\",\n  \"first_name\": \"New\",\n  \"last_name\": \"User\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] }
       }
     },
     {
@@ -31,7 +31,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"TestPass123!\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/token/", "host": ["{{base_url}}"], "path": ["api", "auth", "token", ""] }
       }
     },
     {
@@ -41,7 +41,7 @@
         "header": [
           { "key": "Authorization", "value": "Token {{token}}" }
         ],
-        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/profile/", "host": ["{{base_url}}"], "path": ["api", "auth", "profile", ""] }
       }
     },
     {
@@ -56,7 +56,7 @@
           "mode": "raw",
           "raw": "{\n  \"first_name\": \"Changed\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/profile/", "host": ["{{base_url}}"], "path": ["api", "auth", "profile", ""] }
       }
     },
     {
@@ -228,7 +228,7 @@
       "name": "Negative: Unauthorized Get Profile",
       "request": {
         "method": "GET",
-        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/profile/", "host": ["{{base_url}}"], "path": ["api", "auth", "profile", ""] }
       },
       "response": [
         {
@@ -279,7 +279,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"chainuser\",\n  \"email\": \"chainuser@example.com\",\n  \"password\": \"ChainPass123!\",\n  \"first_name\": \"Chain\",\n  \"last_name\": \"User\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] }
       },
       "response": []
     },
@@ -307,7 +307,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/token/", "host": ["{{base_url}}"], "path": ["api", "auth", "token", ""] }
       },
       "response": []
     },
@@ -318,7 +318,7 @@
         "header": [
           { "key": "Authorization", "value": "Token {{token}}" }
         ],
-        "url": { "raw": "{{base_url}}/api/profile/", "host": ["{{base_url}}"], "path": ["api", "profile", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/profile/", "host": ["{{base_url}}"], "path": ["api", "auth", "profile", ""] }
       },
       "response": []
     },
@@ -345,7 +345,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"userA\",\n  \"email\": \"userA@example.com\",\n  \"password\": \"UserAPass123!\",\n  \"first_name\": \"User\",\n  \"last_name\": \"A\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] }
       }
     },
     {
@@ -371,7 +371,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"{{userA}}\",\n  \"password\": \"{{passA}}\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/token/", "host": ["{{base_url}}"], "path": ["api", "auth", "token", ""] }
       }
     },
     {
@@ -424,7 +424,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"userB\",\n  \"email\": \"userB@example.com\",\n  \"password\": \"UserBPass123!\",\n  \"first_name\": \"User\",\n  \"last_name\": \"B\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] }
       }
     },
     {
@@ -450,7 +450,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"{{userB}}\",\n  \"password\": \"{{passB}}\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/token/", "host": ["{{base_url}}"], "path": ["api", "auth", "token", ""] }
       }
     },
     {
@@ -493,7 +493,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"e2euser\",\n  \"email\": \"e2euser@example.com\",\n  \"password\": \"E2eUserPass123!\",\n  \"first_name\": \"E2E\",\n  \"last_name\": \"User\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/register/", "host": ["{{base_url}}"], "path": ["api", "register", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] }
       }
     },
     {
@@ -519,7 +519,7 @@
           "mode": "raw",
           "raw": "{\n  \"username\": \"{{e2e_user}}\",\n  \"password\": \"{{e2e_pass}}\"\n}"
         },
-        "url": { "raw": "{{base_url}}/api/token-auth/", "host": ["{{base_url}}"], "path": ["api", "token-auth", ""] }
+        "url": { "raw": "{{base_url}}/api/auth/token/", "host": ["{{base_url}}"], "path": ["api", "auth", "token", ""] }
       }
     },
     {
