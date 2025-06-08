@@ -8,6 +8,7 @@ from .views import (
     openapi_spec, UserRegistrationView, UserProfileView,
 )
 from rest_framework.authtoken.views import obtain_auth_token
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
     path('products/', ProductListView.as_view(), name='product-list'),
@@ -21,7 +22,15 @@ urlpatterns = [
     path('orders/<int:pk>/', OrderDetailView.as_view(), name='order-detail'),
     path('shipments/', ShipmentListView.as_view(), name='shipment-list'),
     path('shipments/<int:pk>/', ShipmentDetailView.as_view(), name='shipment-detail'),
-    path('openapi.yaml', openapi_spec, name='openapi-spec'),
+]
+
+urlpatterns += [
+    path('openapi.yaml', SpectacularAPIView.as_view(), name='openapi-spec'),
+    path('', SpectacularSwaggerView.as_view(url_name='openapi-spec'), name='swagger-ui'),
+    path('docs/', SpectacularRedocView.as_view(url_name='openapi-spec'), name='redoc'),
+]
+
+urlpatterns += [
     path('auth/token/', obtain_auth_token, name='api-token-auth'),
     path('auth/register/', UserRegistrationView.as_view(), name='user-register'),
     path('auth/profile/', UserProfileView.as_view(), name='user-profile'),

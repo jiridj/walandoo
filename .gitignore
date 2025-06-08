@@ -1,30 +1,50 @@
-# Python/Django
-backend/venv/
-backend/__pycache__/
-backend/**/*.pyc
-backend/db.sqlite3
-*.log
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
 
-# Django migrations
-backend/**/migrations/
-!backend/**/migrations/__init__.py
-
-# Node/React
-frontend/node_modules/
-frontend/build/
-frontend/.pnp/
-frontend/.pnp.js
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Environment files
+# Django
+*.sqlite3
+db.sqlite3
+/staticfiles/
+/media/
 .env
-*.env
 
-# VSCode settings
+# Backend ignores
+backend/staticfiles/
+backend/venv/
+backend/ENV/
+backend/.env
+
+# Frontend ignores
+frontend/node_modules/
+frontend/.output/
+
+# Virtualenv
+venv/
+ENV/
+
+# Coverage
+.coverage
+htmlcov/
+
+# VSCode
 .vscode/
 
-# Coverage reports
-.coverage
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Test
+.pytest_cache/
+
+# Misc
+*.swp
+*.swo
+
+# Ignore Postman collection results
+*.postman_collection.json
