@@ -11,8 +11,7 @@ paths:
     get:
       summary: List all products
       operationId: listProducts
-      tags:
-        - Products
+      tags: [Products]
       responses:
         '200':
           description: A list of products
@@ -26,8 +25,7 @@ paths:
     get:
       summary: Retrieve a product by ID
       operationId: getProduct
-      tags:
-        - Products
+      tags: [Products]
       parameters:
         - name: id
           in: path
@@ -47,8 +45,7 @@ paths:
     get:
       summary: List all stock records
       operationId: listStock
-      tags:
-        - Stock
+      tags: [Stock]
       responses:
         '200':
           description: A list of stock records
@@ -62,8 +59,7 @@ paths:
     get:
       summary: Retrieve stock by product ID
       operationId: getStockByProductId
-      tags:
-        - Stock
+      tags: [Stock]
       parameters:
         - name: product_id
           in: path
@@ -79,45 +75,13 @@ paths:
                 $ref: '#/components/schemas/Stock'
         '404':
           description: Stock not found
-  /customers/:
-    get:
-      summary: List all customers
-      operationId: listCustomers
-      tags:
-        - Customers
-      responses:
-        '200':
-          description: A list of customers
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Customer'
-    post:
-      summary: Create a customer
-      operationId: createCustomer
-      tags:
-        - Customers
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Customer'
-      responses:
-        '201':
-          description: Customer created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Customer'
   /customers/{id}/:
     get:
-      summary: Retrieve a customer by ID
+      summary: Retrieve your customer profile
       operationId: getCustomer
-      tags:
-        - Customers
+      tags: [Customers]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -131,13 +95,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
         '404':
           description: Customer not found
     put:
-      summary: Update a customer
+      summary: Update your customer profile
       operationId: updateCustomer
-      tags:
-        - Customers
+      tags: [Customers]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -157,11 +126,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Customer'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Customer not found
     delete:
-      summary: Delete a customer
+      summary: Delete your customer profile
       operationId: deleteCustomer
-      tags:
-        - Customers
+      tags: [Customers]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -171,26 +147,36 @@ paths:
       responses:
         '204':
           description: Customer deleted
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Customer not found
   /carts/:
     get:
-      summary: List all shopping carts
+      summary: List your shopping carts
       operationId: listCarts
-      tags:
-        - ShoppingCarts
+      tags: [ShoppingCarts]
+      security:
+        - TokenAuth: []
       responses:
         '200':
-          description: A list of shopping carts
+          description: A list of your shopping carts
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ShoppingCart'
+        '401':
+          description: Not authenticated
     post:
       summary: Create a shopping cart
       operationId: createCart
-      tags:
-        - ShoppingCarts
+      tags: [ShoppingCarts]
+      security:
+        - TokenAuth: []
       requestBody:
         required: true
         content:
@@ -204,12 +190,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ShoppingCart'
+        '401':
+          description: Not authenticated
   /carts/{id}/:
     get:
       summary: Retrieve a shopping cart by ID
       operationId: getCart
-      tags:
-        - ShoppingCarts
+      tags: [ShoppingCarts]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -223,13 +212,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ShoppingCart'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
         '404':
           description: Shopping cart not found
     put:
       summary: Update a shopping cart
       operationId: updateCart
-      tags:
-        - ShoppingCarts
+      tags: [ShoppingCarts]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -249,11 +243,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ShoppingCart'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Shopping cart not found
     delete:
       summary: Delete a shopping cart
       operationId: deleteCart
-      tags:
-        - ShoppingCarts
+      tags: [ShoppingCarts]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -263,26 +264,152 @@ paths:
       responses:
         '204':
           description: Shopping cart deleted
-  /orders/:
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Shopping cart not found
+  /cart-items/:
     get:
-      summary: List all orders
-      operationId: listOrders
+      summary: List all shopping cart items
+      operationId: listCartItems
       tags:
-        - Orders
+        - ShoppingCartItems
+      security:
+        - TokenAuth: []
       responses:
         '200':
-          description: A list of orders
+          description: A list of shopping cart items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShoppingCartItem'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      summary: Add item to shopping cart
+      operationId: addCartItem
+      tags:
+        - ShoppingCartItems
+      security:
+        - TokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingCartItem'
+      responses:
+        '201':
+          description: Shopping cart item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartItem'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /cart-items/{id}/:
+    get:
+      summary: Retrieve a shopping cart item by ID
+      operationId: getCartItem
+      tags:
+        - ShoppingCartItems
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Shopping cart item details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartItem'
+        '404':
+          description: Shopping cart item not found
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      summary: Update a shopping cart item
+      operationId: updateCartItem
+      tags:
+        - ShoppingCartItems
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShoppingCartItem'
+      responses:
+        '200':
+          description: Shopping cart item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShoppingCartItem'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      summary: Delete a shopping cart item
+      operationId: deleteCartItem
+      tags:
+        - ShoppingCartItems
+      security:
+        - TokenAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Shopping cart item deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /orders/:
+    get:
+      summary: List your orders
+      operationId: listOrders
+      tags: [Orders]
+      security:
+        - TokenAuth: []
+      responses:
+        '200':
+          description: A list of your orders
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Order'
+        '401':
+          description: Not authenticated
     post:
       summary: Create an order
       operationId: createOrder
-      tags:
-        - Orders
+      tags: [Orders]
+      security:
+        - TokenAuth: []
       requestBody:
         required: true
         content:
@@ -296,12 +423,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
+        '401':
+          description: Not authenticated
   /orders/{id}/:
     get:
-      summary: Retrieve an order by ID
+      summary: Retrieve your order by ID
       operationId: getOrder
-      tags:
-        - Orders
+      tags: [Orders]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -315,13 +445,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
         '404':
           description: Order not found
     put:
-      summary: Update an order
+      summary: Update your order
       operationId: updateOrder
-      tags:
-        - Orders
+      tags: [Orders]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -341,11 +476,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Order not found
     delete:
-      summary: Delete an order
+      summary: Delete your order
       operationId: deleteOrder
-      tags:
-        - Orders
+      tags: [Orders]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -355,26 +497,36 @@ paths:
       responses:
         '204':
           description: Order deleted
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Order not found
   /shipments/:
     get:
-      summary: List all shipments
+      summary: List your shipments
       operationId: listShipments
-      tags:
-        - Shipments
+      tags: [Shipments]
+      security:
+        - TokenAuth: []
       responses:
         '200':
-          description: A list of shipments
+          description: A list of your shipments
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Shipment'
+        '401':
+          description: Not authenticated
     post:
       summary: Create a shipment
       operationId: createShipment
-      tags:
-        - Shipments
+      tags: [Shipments]
+      security:
+        - TokenAuth: []
       requestBody:
         required: true
         content:
@@ -388,12 +540,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Shipment'
+        '401':
+          description: Not authenticated
   /shipments/{id}/:
     get:
-      summary: Retrieve a shipment by ID
+      summary: Retrieve your shipment by ID
       operationId: getShipment
-      tags:
-        - Shipments
+      tags: [Shipments]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -407,13 +562,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Shipment'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
         '404':
           description: Shipment not found
     put:
-      summary: Update a shipment
+      summary: Update your shipment
       operationId: updateShipment
-      tags:
-        - Shipments
+      tags: [Shipments]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -433,11 +593,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Shipment'
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Shipment not found
     delete:
-      summary: Delete a shipment
+      summary: Delete your shipment
       operationId: deleteShipment
-      tags:
-        - Shipments
+      tags: [Shipments]
+      security:
+        - TokenAuth: []
       parameters:
         - name: id
           in: path
@@ -447,6 +614,108 @@ paths:
       responses:
         '204':
           description: Shipment deleted
+        '401':
+          description: Not authenticated
+        '403':
+          description: Forbidden
+        '404':
+          description: Shipment not found
+  /auth/register/:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '201':
+          description: User registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  email:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+  /auth/token/:
+    post:
+      summary: Obtain authentication token
+      operationId: obtainToken
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Token obtained
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /auth/profile/:
+    get:
+      summary: Get current user profile
+      operationId: getProfile
+      tags:
+        - Authentication
+      security:
+        - TokenAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  email:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
 components:
   schemas:
     Product:
@@ -454,9 +723,7 @@ components:
       properties:
         id:
           type: integer
-        number:
-          type: integer
-        title:
+        name:
           type: string
         price:
           type: number
@@ -465,23 +732,15 @@ components:
           type: string
         category:
           type: string
-        image:
+        image_url:
           type: string
-        rating_rate:
-          type: number
-          format: float
-        rating_count:
-          type: integer
       required:
         - id
-        - number
-        - title
+        - name
         - price
         - description
         - category
-        - image
-        - rating_rate
-        - rating_count
+        - image_url
     Stock:
       type: object
       properties:
@@ -489,7 +748,7 @@ components:
           type: integer
         product:
           type: integer
-        product_title:
+        product_name:
           type: string
         quantity:
           type: integer
@@ -530,8 +789,6 @@ components:
           type: integer
         customer:
           type: integer
-        customer_name:
-          type: string
         created_at:
           type: string
           format: date-time
@@ -553,7 +810,7 @@ components:
           type: integer
         product:
           type: integer
-        product_title:
+        product_name:
           type: string
         quantity:
           type: integer
@@ -568,8 +825,6 @@ components:
           type: integer
         customer:
           type: integer
-        customer_name:
-          type: string
         created_at:
           type: string
           format: date-time
@@ -595,7 +850,7 @@ components:
           type: integer
         product:
           type: integer
-        product_title:
+        product_name:
           type: string
         quantity:
           type: integer
@@ -613,8 +868,6 @@ components:
         id:
           type: integer
         order:
-          type: integer
-        order_id:
           type: integer
         tracking_number:
           type: string
@@ -638,5 +891,31 @@ components:
         - carrier
         - status
         - last_updated
+  responses:
+    UnauthorizedError:
+      description: Authentication credentials were not provided or are invalid.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: 'Authentication credentials were not provided.'
+    BadRequestError:
+      description: Bad request due to invalid input.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                example: 'Invalid input.'
+  securitySchemes:
+    TokenAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
 security:
   - TokenAuth: []
